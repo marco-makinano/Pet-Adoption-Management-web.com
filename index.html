@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Adoption System - Find Your Perfect Companion</title>
+    <meta name="description" content="Browse, manage, and adopt pets through our comprehensive adoption management system">
+    <link rel="stylesheet" href="cs.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐾 Pet Adoption System</h1>
+            <p class="subtitle">Find your perfect companion</p>
+        </header>
+
+        <!-- Role Selector -->
+        <div class="role-selector">
+            <button class="role-btn active" data-role="user">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                User
+            </button>
+            <button class="role-btn" data-role="employee">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+                Employee
+            </button>
+            <button class="role-btn" data-role="admin">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                Admin
+            </button>
+        </div>
+
+        <!-- User Interface -->
+        <div id="user-interface" class="interface active">
+            <div class="interface-header">
+                <h2>Available Pets</h2>
+                <p class="description">Find your perfect companion</p>
+            </div>
+
+            <div class="filters">
+                <input type="text" id="search-input" class="search-input" placeholder="Search by name or breed...">
+                <select id="type-filter" class="type-select">
+                    <option value="">All Pets (Dogs & Cats)</option>
+                    <option value="Dog">Dog</option>
+                    <option value="Cat">Cat</option>
+                </select>
+            </div>
+
+            <div id="user-pets-grid" class="pets-grid"></div>
+        </div>
+
+        <!-- Employee Interface -->
+        <div id="employee-interface" class="interface">
+            <div class="interface-header">
+                <h2>Pending Adoptions</h2>
+                <p class="description">Review and manage adoption applications</p>
+            </div>
+            <div id="employee-pets-grid" class="pets-grid"></div>
+        </div>
+
+        <!-- Admin Interface -->
+        <div id="admin-interface" class="interface">
+            <div class="interface-header">
+                <h2>Admin Dashboard</h2>
+                <p class="description">Manage all pets in the system</p>
+            </div>
+
+            <div class="admin-form">
+                <h3>Add New Pet</h3>
+                <form id="add-pet-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Name *</label>
+                            <input type="text" id="pet-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Breed *</label>
+                            <input type="text" id="pet-breed" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Age *</label>
+                            <input type="number" id="pet-age" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Status *</label>
+                            <select id="pet-status" required>
+                                <option value="Available">Available</option>
+                                <option value="Pending Adoption">Pending Adoption</option>
+                                <option value="Adopted">Adopted</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Type *</label>
+                            <select id="pet-type" required>
+                                <option value="Dog">Dog</option>
+                                <option value="Cat">Cat</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Location *</label>
+                            <input type="text" id="pet-location" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Description</label>
+                            <textarea id="pet-description" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Pet</button>
+                </form>
+            </div>
+
+            <div class="interface-header" style="margin-top: 3rem;">
+                <h3>All Pets</h3>
+            </div>
+            <div id="admin-pets-grid" class="pets-grid"></div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script src="main.js"></script>
+</body>
+</html>
