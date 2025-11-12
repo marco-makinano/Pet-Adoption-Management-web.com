@@ -3,132 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pet Adoption System - Find Your Perfect Companion</title>
-    <meta name="description" content="Browse, manage, and adopt pets through our comprehensive adoption management system">
-    <link rel="stylesheet" href="cs.css">
+    <title>Pet Adoption Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>🐾 Pet Adoption System</h1>
-            <p class="subtitle">Find your perfect companion</p>
+<body class="min-h-screen bg-white text-gray-900">
+    <div id="app">
+        <header class="border-b bg-white">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex items-center gap-3">
+                    <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="PawPrint"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zM12 18a6 6 0 100-12 6 6 0 000 12zM10.5 12a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm6 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm-3-4a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm0 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM17.5 12a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/></svg>
+                    <div>
+                        <h1 class="text-2xl font-bold">Pet Adoption Center</h1>
+                        <p class="text-sm text-gray-500">Find your perfect companion</p>
+                    </div>
+                </div>
+            </div>
         </header>
 
-        <!-- Role Selector -->
-        <div class="role-selector">
-            <button class="role-btn active" data-role="user">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
-                User
-            </button>
-            <button class="role-btn" data-role="employee">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                </svg>
-                Employee
-            </button>
-            <button class="role-btn" data-role="admin">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                </svg>
-                Admin
-            </button>
-        </div>
+        <main class="container mx-auto px-4 py-8">
+            <div class="space-y-6">
+                <div id="tabs-list" class="grid w-full max-w-md grid-cols-4 p-1 rounded-lg bg-gray-100/50 border border-gray-200" role="tablist">
+                    <button class="tab-trigger p-2 text-sm font-medium rounded-md transition-colors" data-tab="browse" data-default="true">Browse</button>
+                    <button class="tab-trigger p-2 text-sm font-medium rounded-md transition-colors" data-tab="dashboard">Dashboard</button>
+                    <button class="tab-trigger p-2 text-sm font-medium rounded-md transition-colors" data-tab="manage">Manage Pets</button>
+                    <button class="tab-trigger p-2 text-sm font-medium rounded-md transition-colors" data-tab="requests">Requests</button>
+                </div>
 
-        <!-- User Interface -->
-        <div id="user-interface" class="interface active">
-            <div class="interface-header">
-                <h2>Available Pets</h2>
-                <p class="description">Find your perfect companion</p>
-            </div>
-
-            <div class="filters">
-                <input type="text" id="search-input" class="search-input" placeholder="Search by name or breed...">
-                <select id="type-filter" class="type-select">
-                    <option value="">All Pets (Dogs & Cats)</option>
-                    <option value="Dog">Dog</option>
-                    <option value="Cat">Cat</option>
-                </select>
-            </div>
-
-            <div id="user-pets-grid" class="pets-grid"></div>
-        </div>
-
-        <!-- Employee Interface -->
-        <div id="employee-interface" class="interface">
-            <div class="interface-header">
-                <h2>Pending Adoptions</h2>
-                <p class="description">Review and manage adoption applications</p>
-            </div>
-            <div id="employee-pets-grid" class="pets-grid"></div>
-        </div>
-
-        <!-- Admin Interface -->
-        <div id="admin-interface" class="interface">
-            <div class="interface-header">
-                <h2>Admin Dashboard</h2>
-                <p class="description">Manage all pets in the system</p>
-            </div>
-
-            <div class="admin-form">
-                <h3>Add New Pet</h3>
-                <form id="add-pet-form">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Name *</label>
-                            <input type="text" id="pet-name" required>
+                <div id="tabs-content">
+                    <div id="content-browse" class="tab-content space-y-6" data-tab-content="browse">
+                        <div>
+                            <h2 class="text-xl font-semibold">Available Pets</h2>
+                            <p class="text-gray-500">Browse our available pets and find your new best friend</p>
                         </div>
-                        <div class="form-group">
-                            <label>Breed *</label>
-                            <input type="text" id="pet-breed" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Age *</label>
-                            <input type="number" id="pet-age" min="0" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Status *</label>
-                            <select id="pet-status" required>
-                                <option value="Available">Available</option>
-                                <option value="Pending Adoption">Pending Adoption</option>
-                                <option value="Adopted">Adopted</option>
+                        
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <div class="relative flex-1">
+                                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
+                                <input id="browse-search" type="text" placeholder="Search by name or breed..." class="input pl-10">
+                            </div>
+                            <select id="browse-filter-species" class="select w-full sm:w-[180px]">
+                                <option value="all">All Species</option>
+                                <option value="Dog">Dogs</option>
+                                <option value="Cat">Cats</option>
+                                <option value="Rabbit">Rabbits</option>
+                                <option value="Bird">Birds</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>Type *</label>
-                            <select id="pet-type" required>
-                                <option value="Dog">Dog</option>
-                                <option value="Cat">Cat</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Location *</label>
-                            <input type="text" id="pet-location" required>
-                        </div>
-                        <div class="form-group full-width">
-                            <label>Description</label>
-                            <textarea id="pet-description" rows="3"></textarea>
+
+                        <div id="pet-grid-browse" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            </div>
+
+                        <div id="no-pets-browse" class="text-center py-12 hidden">
+                            <i data-lucide="paw-print" class="w-16 h-16 mx-auto text-gray-300 mb-4"></i>
+                            <h3 class="text-lg font-medium">No pets found</h3>
+                            <p class="text-gray-500">Try adjusting your search or filters</p>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Add Pet</button>
-                </form>
-            </div>
 
-            <div class="interface-header" style="margin-top: 3rem;">
-                <h3>All Pets</h3>
+                    <div id="content-dashboard" class="tab-content hidden" data-tab-content="dashboard">
+                        <div id="dashboard-content" class="space-y-6">
+                            <h2 class="text-xl font-semibold">Dashboard Summary</h2>
+                            <div class="grid gap-4 md:grid-cols-3">
+                                <div class="p-4 border rounded-lg bg-gray-50">
+                                    <h3 class="text-lg font-medium">Total Pets</h3>
+                                    <p id="dashboard-total-pets" class="text-3xl font-bold text-indigo-600">0</p>
+                                </div>
+                                <div class="p-4 border rounded-lg bg-gray-50">
+                                    <h3 class="text-lg font-medium">Available for Adoption</h3>
+                                    <p id="dashboard-available-pets" class="text-3xl font-bold text-green-600">0</p>
+                                </div>
+                                <div class="p-4 border rounded-lg bg-gray-50">
+                                    <h3 class="text-lg font-medium">Pending Requests</h3>
+                                    <p id="dashboard-pending-requests" class="text-3xl font-bold text-yellow-600">0</p>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-semibold pt-4">Pet Status Breakdown</h3>
+                            <ul id="dashboard-status-list" class="space-y-2"></ul>
+                            
+                            <h3 class="text-lg font-semibold pt-4">Recent Adoption Requests</h3>
+                            <div id="dashboard-recent-requests" class="border rounded-lg p-4">
+                                <p class="text-gray-500">No recent requests.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="content-manage" class="tab-content hidden space-y-6" data-tab-content="manage">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h2 class="text-xl font-semibold">Manage Pets</h2>
+                                <p class="text-gray-500">Add, edit, or remove pets from the system</p>
+                            </div>
+                            <button id="add-pet-btn" class="button button-primary">
+                                <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                                Add Pet
+                            </button>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <div class="relative flex-1">
+                                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
+                                <input id="manage-search" type="text" placeholder="Search by name or breed..." class="input pl-10">
+                            </div>
+                            <select id="manage-filter-species" class="select w-full sm:w-[180px]">
+                                <option value="all">All Species</option>
+                                <option value="Dog">Dogs</option>
+                                <option value="Cat">Cats</option>
+                                <option value="Rabbit">Rabbits</option>
+                                <option value="Bird">Birds</option>
+                            </select>
+                            <select id="manage-filter-status" class="select w-full sm:w-[180px]">
+                                <option value="all">All Status</option>
+                                <option value="available">Available</option>
+                                <option value="pending">Pending</option>
+                                <option value="adopted">Adopted</option>
+                            </select>
+                        </div>
+
+                        <div id="pet-grid-manage" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            </div>
+
+                        <div id="no-pets-manage" class="text-center py-12 hidden">
+                            <i data-lucide="paw-print" class="w-16 h-16 mx-auto text-gray-300 mb-4"></i>
+                            <h3 class="text-lg font-medium">No pets found</h3>
+                            <p class="text-gray-500">Try adjusting your search or filters</p>
+                        </div>
+                    </div>
+
+                    <div id="content-requests" class="tab-content hidden space-y-6" data-tab-content="requests">
+                        <div>
+                            <h2 class="text-xl font-semibold">Adoption Requests</h2>
+                            <p class="text-gray-500">Review and manage adoption applications</p>
+                        </div>
+
+                        <div id="requests-table-container" class="border rounded-lg overflow-x-auto">
+                            </div>
+                        
+                        <div id="no-requests" class="text-center py-12 border rounded-lg hidden">
+                            <h3 class="text-lg font-medium">No adoption requests</h3>
+                            <p class="text-gray-500">Adoption requests will appear here</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="admin-pets-grid" class="pets-grid"></div>
+        </main>
+    </div>
+
+    <div id="add-pet-dialog" class="dialog-overlay hidden">
+        <div class="dialog-content">
+            <h3 id="add-edit-pet-title" class="text-xl font-semibold mb-4">Add New Pet</h3>
+            <form id="add-edit-pet-form" class="space-y-4">
+                <input type="hidden" id="pet-id">
+                <div class="space-y-2">
+                    <label for="pet-name" class="label">Name</label>
+                    <input type="text" id="pet-name" required class="input">
+                </div>
+                <div class="space-y-2">
+                    <label for="pet-species" class="label">Species</label>
+                    <select id="pet-species" required class="select">
+                        <option value="">Select species</option>
+                        <option value="Dog">Dog</option>
+                        <option value="Cat">Cat</option>
+                        <option value="Rabbit">Rabbit</option>
+                        <option value="Bird">Bird</option>
+                    </select>
+                </div>
+                <div class="flex justify-end gap-2 pt-4">
+                    <button type="button" class="button button-secondary" onclick="closeDialog('add-pet-dialog')">Cancel</button>
+                    <button type="submit" class="button button-primary">Save Pet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="adoption-request-dialog" class="dialog-overlay hidden">
+        <div class="dialog-content">
+            <h3 class="text-xl font-semibold mb-4">Adoption Application for <span id="adopt-pet-name"></span></h3>
+            <form id="adoption-request-form" class="space-y-4">
+                <input type="hidden" id="adopt-pet-id">
+                <input type="hidden" id="adopt-pet-original-name">
+                <div class="space-y-2">
+                    <label for="applicant-name" class="label">Full Name</label>
+                    <input type="text" id="applicant-name" required class="input">
+                </div>
+                <div class="flex justify-end gap-2 pt-4">
+                    <button type="button" class="button button-secondary" onclick="closeDialog('adoption-request-dialog')">Cancel</button>
+                    <button type="submit" class="button button-primary">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="pet-details-dialog" class="dialog-overlay hidden">
+        <div class="dialog-content max-w-lg">
+            <div id="pet-details-content" class="space-y-4">
+                <h3 class="text-2xl font-bold" id="detail-name"></h3>
+                </div>
+            <div class="flex justify-end pt-4">
+                <button type="button" class="button button-secondary" onclick="closeDialog('pet-details-dialog')">Close</button>
+            </div>
         </div>
     </div>
 
-    <!-- Toast Container -->
-    <div id="toast-container"></div>
+    <div id="delete-confirm-dialog" class="dialog-overlay hidden">
+        <div class="dialog-content max-w-md">
+            <h3 class="text-xl font-semibold mb-2">Are you sure?</h3>
+            <p class="text-gray-500 mb-4">This action cannot be undone. This will permanently delete the pet from the system.</p>
+            <div class="flex justify-end gap-2">
+                <button type="button" class="button button-secondary" onclick="closeDialog('delete-confirm-dialog')">Cancel</button>
+                <button type="button" id="confirm-delete-btn" class="button button-danger">Delete</button>
+            </div>
+        </div>
+    </div>
 
-    <script src="main.js"></script>
+   
+    <div id="toast-container" class="fixed bottom-4 right-4 space-y-2 z-50"></div>
+
+            
+                
+    <script src="fuction.js"></script>
 </body>
 </html>
+   
