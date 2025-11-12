@@ -1,395 +1,115 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    --primary: hsl(221, 83%, 53%);
-    --primary-hover: hsl(221, 83%, 45%);
-    --success: hsl(142, 76%, 36%);
-    --success-hover: hsl(142, 76%, 30%);
-    --danger: hsl(0, 84%, 60%);
-    --danger-hover: hsl(0, 84%, 50%);
-    --background: hsl(0, 0%, 100%);
-    --foreground: hsl(222, 47%, 11%);
-    --muted: hsl(210, 40%, 96%);
-    --muted-foreground: hsl(215, 16%, 47%);
-    --border: hsl(214, 32%, 91%);
-    --card: hsl(0, 0%, 100%);
-    --card-foreground: hsl(222, 47%, 11%);
-    --accent: hsl(210, 40%, 96%);
-    --shadow: rgba(0, 0, 0, 0.1);
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background-color: var(--background);
-    color: var(--foreground);
-    line-height: 1.6;
-    padding: 2rem 1rem;
-}
-
-.container {
-    max-width: 1280px;
-    margin: 0 auto;
-}
-
-header {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-header h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-
-.subtitle {
-    color: var(--muted-foreground);
-    font-size: 1.1rem;
-}
-
-/* Role Selector */
-.role-selector {
+/* Basic Reset for Dialogs/Modals and custom components */
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
-    gap: 0.5rem;
-    background: var(--muted);
-    padding: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+.dialog-content {
+    background-color: white;
+    padding: 1.5rem;
     border-radius: 0.5rem;
-    margin-bottom: 2rem;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    width: 90%; /* Adjust the width as needed */
+    max-width: 600px; /* Set a maximum width */
+    height: auto; /* Adjust height as needed */
+    max-height: 80vh; /* Set a maximum height */
+    overflow-y: auto; /* Allow scrolling if content exceeds max height */
+    border-radius: 0.5rem;
 }
 
-.role-btn {
-    flex: 1;
+/* Custom styles to mimic Shadcn/Tailwind components if not using the CDN */
+.input, .select {
     display: flex;
+    height: 2.5rem;
+    width: 100%;
+    border-radius: 0.375rem; /* rounded-md */
+    border: 1px solid #e5e7eb; /* border-gray-200 */
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    background-color: #ffffff;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.input:focus, .select:focus {
+    border-color: #4f46e5; /* ring-indigo-500 */
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.5);
+}
+
+.button {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    border: none;
-    background: transparent;
-    color: var(--foreground);
     border-radius: 0.375rem;
-    cursor: pointer;
-    font-size: 0.95rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
     font-weight: 500;
-    transition: all 0.2s;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out, opacity 0.15s ease-in-out;
 }
-
-.role-btn:hover {
-    background: var(--accent);
-}
-
-.role-btn.active {
-    background: var(--primary);
+.button-primary {
+    background-color: #4f46e5; /* indigo-600 */
     color: white;
 }
-
-.icon {
-    width: 1rem;
-    height: 1rem;
+.button-primary:hover {
+    background-color: #4338ca; /* indigo-700 */
+}
+.button-secondary {
+    background-color: #f3f4f6; /* gray-100 */
+    color: #1f2937; /* gray-800 */
+    border: 1px solid #e5e7eb;
+}
+.button-secondary:hover {
+    background-color: #e5e7eb; /* gray-200 */
+}
+.button-danger {
+    background-color: #ef4444; /* red-500 */
+    color: white;
+}
+.button-danger:hover {
+    background-color: #dc2626; /* red-600 */
 }
 
-/* Interface */
-.interface {
-    display: none;
+/* Tabs-specific styling */
+#tabs-list .tab-trigger[aria-selected="true"] {
+    background-color: white;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-.interface.active {
-    display: block;
-}
-
-.interface-header {
-    margin-bottom: 2rem;
-}
-
-.interface-header h2,
-.interface-header h3 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-
-.description {
-    color: var(--muted-foreground);
-}
-
-/* Filters */
-.filters {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-}
-
-.search-input,
-.location-select {
-    flex: 1;
-    min-width: 200px;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--border);
-    border-radius: 0.5rem;
-    font-size: 0.95rem;
-    background: var(--card);
-}
-
-.search-input:focus,
-.location-select:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-/* Pets Grid */
-.pets-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-}
-
-/* Pet Card */
-.pet-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    box-shadow: 0 1px 3px var(--shadow);
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.pet-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px var(--shadow);
-}
-
-.pet-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-    margin-bottom: 1rem;
-}
-
-.pet-card h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-}
-
-.status-badge {
-    display: flex;
+/* Badge styling */
+.badge {
+    display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
+    border-radius: 9999px; /* full */
     padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
     font-size: 0.75rem;
     font-weight: 500;
 }
-
-.status-badge.available {
-    background: hsl(142, 76%, 90%);
-    color: hsl(142, 76%, 25%);
-}
-
-.status-badge.pending {
-    background: hsl(45, 93%, 90%);
-    color: hsl(45, 93%, 25%);
-}
-
-.status-badge.adopted {
-    background: hsl(221, 83%, 90%);
-    color: hsl(221, 83%, 35%);
-}
-
-.pet-info {
-    margin-bottom: 1rem;
-}
-
-.pet-info-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--muted-foreground);
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-}
-
-.pet-description {
-    color: var(--muted-foreground);
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-}
-
-.pet-actions {
-    display: flex;
-    gap: 0.5rem;
-}
-
-/* Buttons */
-.btn {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 0.5rem;
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    flex: 1;
-}
-
-.btn-primary {
-    background: var(--primary);
-    color: white;
-}
-
-.btn-primary:hover {
-    background: var(--primary-hover);
-}
-
-.btn-success {
-    background: var(--success);
-    color: white;
-}
-
-.btn-success:hover {
-    background: var(--success-hover);
-}
-
-.btn-danger {
-    background: var(--danger);
-    color: white;
-}
-
-.btn-danger:hover {
-    background: var(--danger-hover);
-}
-
-/* Admin Form */
-.admin-form {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 0.75rem;
-    padding: 2rem;
-    margin-bottom: 2rem;
-}
-
-.admin-form h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.form-group.full-width {
-    grid-column: 1 / -1;
-}
-
-.form-group label {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--border);
-    border-radius: 0.5rem;
-    font-size: 0.95rem;
-    font-family: inherit;
-    background: var(--background);
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
+.badge-default { background-color: #4f46e5; color: white; }
+.badge-destructive { background-color: #ef4444; color: white; }
+.badge-secondary { background-color: #f3f4f6; color: #1f2937; }
 
 /* Toast */
-#toast-container {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
 .toast {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 0.5rem;
-    padding: 1rem 1.5rem;
-    box-shadow: 0 4px 6px var(--shadow);
-    min-width: 300px;
-    animation: slideIn 0.3s ease-out;
+    background-color: #16a34a; /* green-600 */
+    color: white;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.375rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+    animation: fadeInOut 4s ease-in-out forwards;
 }
 
-.toast.success {
-    border-left: 4px solid var(--success);
-}
-
-.toast.info {
-    border-left: 4px solid var(--primary);
-}
-
-.toast.error {
-    border-left: 4px solid var(--danger);
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-/* Empty State */
-.empty-state {
-    text-align: center;
-    padding: 3rem;
-    color: var(--muted-foreground);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    header h1 {
-        font-size: 2rem;
-    }
-
-    .pets-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .role-selector {
-        flex-direction: column;
-    }
-
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(10px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(10px); }
 }
